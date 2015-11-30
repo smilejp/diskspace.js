@@ -21,11 +21,18 @@ function check(drive, callback)
 
 	if (osType === 'Windows_NT') //Windows
 	{
-		
+
 		if(drive.length <= 3)
 			drive = drive.charAt(0);
-			
-		exec(path.join(__dirname, 'drivespace.exe') + ' drive-' + drive, function(error, stdout, stderr)
+
+		function maybeQuote(a) {
+			if (a.indexOf(' ') != -1) {
+				a = '"' + a + '"';
+			}
+			return a;
+		}
+
+		exec(path.join(maybeQuote(__dirname), 'drivespace.exe') + ' drive-' + drive, function(error, stdout, stderr)
 		{
 			if (error)
 			{
@@ -64,7 +71,7 @@ function check(drive, callback)
 				{
 					status = 'STDERR';
 				}
-				
+
 				callback ? callback(error, total, free, status)
 						 : console.error(stderr);
 			}
